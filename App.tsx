@@ -6,6 +6,9 @@ import { THEME } from './src/theme';
 import { Loading } from '@components/Loading';
 import { Routes } from '@routes/index';
 import { AuthContextProvider } from '@contexts/AuthContext';
+import { NotificationClickEvent, NotificationWillDisplayEvent, OneSignal } from 'react-native-onesignal';
+
+OneSignal.initialize('61b8ef08-6989-4ebe-b129-904fb098b1b0');
 
 export default function App() {
   const [fontsLoaded] = useFonts({
