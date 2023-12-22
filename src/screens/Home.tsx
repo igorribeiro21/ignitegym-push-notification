@@ -1,6 +1,7 @@
 import { VStack, FlatList, HStack, Heading, Text, useToast } from 'native-base';
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { differenceInDays } from 'date-fns';
 
 import { api } from '@services/api';
 import { HomeHeader } from '@components/HomeHeader';
@@ -12,6 +13,7 @@ import { AppError } from '@utils/AppError';
 import { ExerciseDTO } from '@dtos/ExerciseDTO';
 import { Loading } from '@components/Loading';
 import { HistoryDTO } from '@dtos/HistoryDTO';
+import { tagDaysOff } from '../notifications/notificationTags';
 
 
 export function Home() {
@@ -71,7 +73,7 @@ export function Home() {
             setIsLoading(true);
 
             const response = await api.get('/history');
-            
+
             setExercisesHistory(response.data);
         } catch (error) {
             const isAppError = error instanceof AppError;
@@ -94,10 +96,12 @@ export function Home() {
 
     useEffect(() => {
         const ultimoDia = exercisesHistory[0] as any;
-        const dataUltimoDia = ultimoDia?.data[0] as HistoryDTO;       
-        const ultimoDiaExercicio = dataUltimoDia?.created_at;       
+        const dataUltimoDia = ultimoDia?.data[0] as HistoryDTO;
+        const ultimoDiaExercicio = dataUltimoDia?.created_at;
 
-        console.log('ultimoDiaExercicio', ultimoDiaExercicio);
+        const differenceDaysLastExercise = differenceInDays(new Date(), new Date(ultimoDiaExercicio));
+
+        tagDaysOff(differenceDaysLastExercise);
     }, [exercisesHistory])
 
     useFocusEffect(useCallback(() => {

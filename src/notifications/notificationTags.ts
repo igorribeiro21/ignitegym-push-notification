@@ -1,6 +1,5 @@
 import { OneSignal } from 'react-native-onesignal';
 
-export function tagDaysOff(days: number) {
-    console.log('entrou aqui');
+export function tagDaysOff(days: number) {    
     OneSignal.User.addTag('days_off', String(days));
 }

@@ -29,7 +29,6 @@ export default function App() {
   }
 
   useEffect(() => {
-    tagDaysOff(12);
     unsubscribe();
   }, []);
 
