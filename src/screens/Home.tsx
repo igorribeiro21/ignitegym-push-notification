@@ -1,6 +1,7 @@
 import { VStack, FlatList, HStack, Heading, Text, useToast } from 'native-base';
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
+import { differenceInDays } from 'date-fns';
 
 import { api } from '@services/api';
 import { HomeHeader } from '@components/HomeHeader';
@@ -11,6 +12,8 @@ import { AppNavigatorRoutesProps } from '@routes/app.routes';
 import { AppError } from '@utils/AppError';
 import { ExerciseDTO } from '@dtos/ExerciseDTO';
 import { Loading } from '@components/Loading';
+import { HistoryDTO } from '@dtos/HistoryDTO';
+import { tagDaysOff } from '../notifications/notificationTags';
 
 
 export function Home() {
@@ -18,6 +21,7 @@ export function Home() {
     const [groupSelected, setGroupSelected] = useState('antebraço');
     const [groups, setGroups] = useState<string[]>([]);
     const [exercises, setExercises] = useState<ExerciseDTO[]>([]);
+    const [exercisesHistory, setExercisesHistory] = useState<HistoryDTO[]>([]);
 
     const toast = useToast();
     const navigation = useNavigation<AppNavigatorRoutesProps>();
@@ -64,9 +68,41 @@ export function Home() {
         }
     }
 
+    async function fetchHistory() {
+        try {
+            setIsLoading(true);
+
+            const response = await api.get('/history');
+
+            setExercisesHistory(response.data);
+        } catch (error) {
+            const isAppError = error instanceof AppError;
+            const title = isAppError ? error.message : 'Não foi possível carregar o histórico.';
+
+            toast.show({
+                title,
+                placement: 'top',
+                bgColor: 'red.500'
+            });
+        } finally {
+            setIsLoading(false);
+        }
+    }
+
     useEffect(() => {
         fetchGroups();
+        fetchHistory();
     }, []);
+
+    useEffect(() => {
+        const ultimoDia = exercisesHistory[0] as any;
+        const dataUltimoDia = ultimoDia?.data[0] as HistoryDTO;
+        const ultimoDiaExercicio = dataUltimoDia?.created_at;
+
+        const differenceDaysLastExercise = differenceInDays(new Date(), new Date(ultimoDiaExercicio));
+
+        tagDaysOff(differenceDaysLastExercise);
+    }, [exercisesHistory])
 
     useFocusEffect(useCallback(() => {
         fetchExecisesByGroup();
