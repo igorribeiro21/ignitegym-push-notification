@@ -28,6 +28,8 @@
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
         <data android:scheme="com.igor.ribeiro21.ignitegympushnotification"/>
+        <data android:scheme="ignitegym-push-notification"/>
+        <data android:scheme="exp+ignitegym-push-notification"/>
       </intent-filter>
     </activity>
     <activity android:name="com.facebook.react.devsupport.DevSettingsActivity" android:exported="false"/>

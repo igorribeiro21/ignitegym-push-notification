@@ -32,6 +32,7 @@ export function Exercise() {
 
     async function fetchExerciseDetails() {
         try {
+            console.log('exerciseId',exerciseId);
             setIsLoading(true);
             const response = await api.get(`/exercises/${exerciseId}`);
 
