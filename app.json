@@ -2,6 +2,7 @@
   "expo": {
     "name": "ignitegym-push-notification",
     "slug": "ignitegym-push-notification",
+    "scheme": "ignitegym-push-notification",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

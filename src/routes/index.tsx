@@ -6,6 +6,20 @@ import { AppRoutes } from './app.routes';
 import { useAuth } from '@hooks/useAuth';
 import { Loading } from '@components/Loading';
 
+const linking = {
+    prefixes: ['com.igor.ribeiro21.ignitegympushnotification://','ignitegym-push-notification://','exp+ignitegym-push-notification://'],
+    config: {
+      screens: {
+        exercise: {
+          path: 'exercise/:exerciseId',
+          parse: {
+            exerciseId: (exerciseId: string) => exerciseId
+          }
+        }
+      }
+    }
+  }
+
 export function Routes() {
     const { colors } = useTheme();
     const { user, isLoadingUserStorageData } = useAuth();
@@ -19,7 +33,7 @@ export function Routes() {
 
     return (
         <Box flex={1} bg="gray.700">
-            <NavigationContainer theme={theme}>
+            <NavigationContainer theme={theme} linking={linking}>
                 {user.id ? <AppRoutes /> : <AuthRoutes />}
             </NavigationContainer>
         </Box>
